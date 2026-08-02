@@ -1,0 +1,72 @@
+:host {
+    display: block;
+}
+.brand-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.brand-logo {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+}
+.brand-subtitle {
+    display: block;
+    color: var(--slds-g-color-neutral-base-40, #444);
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+.step-panel {
+    max-width: 76rem;
+    margin: 2rem auto 0;
+}
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+.table-scroll {
+    overflow-x: auto;
+}
+.object-lookup {
+    position: relative;
+}
+.lookup-results {
+    max-height: 18rem;
+    overflow-y: auto;
+}
+.lookup-option {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+.lookup-option:hover,
+.lookup-option:focus {
+    background: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    outline: 0;
+}
+.api-name {
+    display: block;
+    color: var(--slds-g-color-neutral-base-40, #444);
+    font-size: 0.75rem;
+}
+lightning-badge {
+    margin-top: 0.25rem;
+}
+@media (max-width: 48rem) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+    .actions {
+        flex-wrap: wrap;
+    }
+}

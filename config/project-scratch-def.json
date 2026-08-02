@@ -1,0 +1,8 @@
+{
+    "orgName": "Seedforce Development",
+    "edition": "Developer",
+    "features": ["EnableSetPasswordInApi"],
+    "settings": {
+        "lightningExperienceSettings": { "enableS1DesktopEnabled": true }
+    }
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Seedforce User</label>
+    <classAccesses><apexClass>SeedforceController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceDtos</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceApplicationService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceGenerationService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceValidationService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceMetadataService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceGeneratorRecommendations</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceGeneratorCatalog</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>SeedforceConfigurationService</apexClass><enabled>true</enabled></classAccesses>
+    <objectPermissions><object>Seedforce_Generator_Option__c</object><allowRead>true</allowRead><allowCreate
+        >false</allowCreate><allowEdit>false</allowEdit><allowDelete>false</allowDelete><viewAllRecords
+        >false</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <objectPermissions><object>Seedforce_Recommendation_Rule__c</object><allowRead>true</allowRead><allowCreate
+        >false</allowCreate><allowEdit>false</allowEdit><allowDelete>false</allowDelete><viewAllRecords
+        >false</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <fieldPermissions><field>Seedforce_Generator_Option__c.Active__c</field><readable>true</readable><editable
+        >false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Generator_Option__c.Display_Label__c</field><readable>true</readable><editable
+        >false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Generator_Option__c.Sort_Order__c</field><readable>true</readable><editable
+        >false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Recommendation_Rule__c.Active__c</field><readable>true</readable><editable
+        >false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Recommendation_Rule__c.Field_Name_Pattern__c</field><readable
+        >true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Recommendation_Rule__c.Priority__c</field><readable>true</readable><editable
+        >false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Recommendation_Rule__c.Minimum_Length__c</field><readable
+        >true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Seedforce_Recommendation_Rule__c.Maximum_Length__c</field><readable
+        >true</readable><editable>false</editable></fieldPermissions>
+</PermissionSet>

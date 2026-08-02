@@ -1,0 +1,27 @@
+{
+    "name": "seedforce",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build:faker": "node scripts/build-faker.mjs",
+        "verify:faker": "node scripts/verify-faker.mjs",
+        "test": "npm run test:unit",
+        "test:unit": "sfdx-lwc-jest",
+        "test:unit:coverage": "sfdx-lwc-jest --coverage",
+        "lint": "eslint force-app/main/default/lwc",
+        "format": "prettier --write \"**/*.{cls,css,html,js,json,md,xml,yaml,yml}\"",
+        "format:check": "prettier --check \"**/*.{cls,css,html,js,json,md,xml,yaml,yml}\""
+    },
+    "dependencies": {
+        "@faker-js/faker": "^10.1.0"
+    },
+    "devDependencies": {
+        "@prettier/plugin-xml": "^3.4.1",
+        "@salesforce/eslint-config-lwc": "^4.0.0",
+        "@salesforce/sfdx-lwc-jest": "^7.0.0",
+        "eslint": "^9.0.0",
+        "esbuild": "^0.25.0",
+        "prettier": "^3.6.0",
+        "prettier-plugin-apex": "^2.2.6"
+    }
+}

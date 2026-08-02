@@ -1,0 +1,240 @@
+<template>
+    <lightning-card>
+        <div slot="title" class="brand-header">
+            <img src={logoUrl} alt="Seedforce" class="brand-logo" />
+            <div>
+                <span class="slds-text-heading_small">Seedforce</span
+                ><span class="brand-subtitle">Because Empty Orgs Are Boring.</span>
+            </div>
+        </div>
+        <div class="slds-p-horizontal_large slds-p-bottom_large">
+            <lightning-progress-indicator current-step={currentStep} type="base" variant="base">
+                <lightning-progress-step label="Select Object" value="1"></lightning-progress-step>
+                <lightning-progress-step label="Configure Fields" value="2"></lightning-progress-step>
+                <lightning-progress-step label="Preview Records" value="3"></lightning-progress-step>
+                <lightning-progress-step label="Generate Records" value="4"></lightning-progress-step>
+            </lightning-progress-indicator>
+            <template lwc:if={busy}><lightning-spinner alternative-text="Working"></lightning-spinner></template>
+            <template lwc:if={isObjectStep}>
+                <section class="step-panel">
+                    <h2 class="slds-text-heading_medium">Choose a target object</h2>
+                    <p class="slds-text-color_weak slds-m-bottom_medium">
+                        Only createable objects supported by the MVP are shown.
+                    </p>
+                    <div class="slds-combobox_container object-lookup">
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
+                            <lightning-input
+                                type="search"
+                                label="Salesforce object"
+                                value={objectSearch}
+                                placeholder="Search by label or API name"
+                                autocomplete="off"
+                                onchange={handleObjectSearch}
+                                onfocus={handleObjectFocus}
+                                required
+                            ></lightning-input>
+                            <template lwc:if={showObjectDropdown}>
+                                <div
+                                    class="slds-dropdown slds-dropdown_fluid lookup-results"
+                                    role="listbox"
+                                    aria-label="Salesforce objects"
+                                >
+                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                        <template for:each={filteredObjectOptions} for:item="option">
+                                            <li key={option.value} role="presentation" class="slds-listbox__item">
+                                                <button
+                                                    type="button"
+                                                    class="slds-listbox__option slds-listbox__option_plain slds-media lookup-option"
+                                                    role="option"
+                                                    data-value={option.value}
+                                                    onclick={handleObjectSelect}
+                                                >
+                                                    <span class="slds-media__figure"
+                                                        ><lightning-icon
+                                                            icon-name="standard:record"
+                                                            size="small"
+                                                            alternative-text="Object"
+                                                        ></lightning-icon
+                                                    ></span>
+                                                    <span class="slds-media__body"
+                                                        ><span class="slds-truncate" title={option.label}
+                                                            >{option.label}</span
+                                                        ></span
+                                                    >
+                                                </button>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <lightning-button
+                            variant="brand"
+                            label="Configure Fields"
+                            onclick={nextFromObject}
+                            disabled={nextDisabled}
+                        ></lightning-button>
+                    </div>
+                </section>
+            </template>
+            <template lwc:if={isFieldsStep}>
+                <section class="step-panel">
+                    <div class="settings-grid">
+                        <lightning-input
+                            type="number"
+                            label="Number of records"
+                            value={recordCount}
+                            min="1"
+                            max="200"
+                            step="1"
+                            onchange={handleCountChange}
+                            required
+                        ></lightning-input>
+                        <lightning-combobox
+                            label="Faker locale"
+                            value={locale}
+                            options={localeOptions}
+                            onchange={handleLocaleChange}
+                        ></lightning-combobox>
+                    </div>
+                    <template lwc:if={hasBlockers}>
+                        <div class="slds-notify slds-notify_alert slds-alert_error slds-m-vertical_medium" role="alert">
+                            <div>
+                                <strong>This object has unsupported required fields.</strong
+                                ><template for:each={configuration.blockers} for:item="blocker"
+                                    ><p key={blocker}>{blocker}</p></template
+                                >
+                            </div>
+                        </div>
+                    </template>
+                    <lightning-input
+                        class="slds-m-top_medium"
+                        type="checkbox"
+                        label="Select all fields"
+                        checked={allFieldsSelected}
+                        onchange={handleSelectAllFields}
+                    ></lightning-input>
+                    <div class="table-scroll slds-m-top_medium">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Include</th>
+                                    <th scope="col">Field</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Generator</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={configuredFields} for:item="field"
+                                    ><tr key={field.apiName}>
+                                        <td>
+                                            <lightning-input
+                                                type="checkbox"
+                                                variant="label-hidden"
+                                                label="Include"
+                                                checked={field.selected}
+                                                disabled={field.required}
+                                                data-field={field.apiName}
+                                                onchange={handleFieldToggle}
+                                            ></lightning-input>
+                                        </td>
+                                        <td>
+                                            <span>{field.label}</span><code class="api-name">{field.apiName}</code
+                                            ><template lwc:if={field.required}
+                                                ><lightning-badge label="Required"></lightning-badge
+                                            ></template>
+                                        </td>
+                                        <td>{field.dataType}</td>
+                                        <td>
+                                            <lightning-combobox
+                                                variant="label-hidden"
+                                                label="Generator"
+                                                value={field.generator}
+                                                options={generatorOptions}
+                                                data-field={field.apiName}
+                                                onchange={handleGeneratorChange}
+                                            ></lightning-combobox>
+                                        </td></tr
+                                ></template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="actions">
+                        <lightning-button label="Back" onclick={backToObject}></lightning-button
+                        ><lightning-button
+                            variant="brand"
+                            label="Preview Records"
+                            onclick={showPreview}
+                        ></lightning-button>
+                    </div>
+                </section>
+            </template>
+            <template lwc:if={isPreviewStep}>
+                <section class="step-panel">
+                    <h2 class="slds-text-heading_medium">Review before insert</h2>
+                    <lightning-datatable
+                        key-field="_row"
+                        data={previewRows}
+                        columns={previewColumns}
+                        hide-checkbox-column
+                        class="slds-m-top_medium"
+                    ></lightning-datatable>
+                    <div class="actions">
+                        <lightning-button label="Back" onclick={backToFields}></lightning-button
+                        ><lightning-button label="Regenerate" onclick={regenerate}></lightning-button
+                        ><lightning-button
+                            variant="brand"
+                            label="Generate Records"
+                            onclick={requestGenerate}
+                        ></lightning-button>
+                    </div>
+                </section>
+            </template>
+            <template lwc:if={isGenerateStep}>
+                <section class="step-panel">
+                    <h2 class="slds-text-heading_medium">Generation results</h2>
+                    <p class="slds-m-vertical_small">{summary}</p>
+                    <lightning-datatable
+                        key-field="rowNumber"
+                        data={resultRows}
+                        columns={resultColumns}
+                        hide-checkbox-column
+                    ></lightning-datatable>
+                    <div class="actions">
+                        <lightning-button variant="brand" label="Start Over" onclick={startOver}></lightning-button>
+                    </div>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+    <template lwc:if={confirmOpen}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="confirm-heading"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="confirm-heading" class="slds-text-heading_medium">Insert records?</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    Seedforce will insert {recordCount} {selectedObject} records. Partial success is possible.
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeConfirm}></lightning-button
+                    ><lightning-button
+                        class="slds-m-left_small"
+                        variant="brand"
+                        label="Insert"
+                        onclick={confirmGenerate}
+                    ></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>

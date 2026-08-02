@@ -1,0 +1,11 @@
+node_modules/**
+coverage/**
+scripts/**
+docs/**
+README.md
+package*.json
+jest.config.js
+**/jsconfig.json
+**/.eslintrc.json
+**/__tests__/**
+**/*.test.js
